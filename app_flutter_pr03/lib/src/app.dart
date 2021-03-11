@@ -1,4 +1,4 @@
-import 'package:app_flutter_pr02/src/pages/count_page.dart';
+import './pages/count_page.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatelessWidget {
