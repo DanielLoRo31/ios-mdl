@@ -10,38 +10,60 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  final tlimit = 10;
-  final blimit = -10;
-
-  int _yAxisPos = 1;
-  int _xAxisPos = 1;
-  var _positionGrid;
+  final _num = 20;
+  int _yAxisPos;
+  int _xAxisPos;
+  var _data;
 
   HomePageState() {
-    _positionGrid = new List(3);
-    _positionGrid[0] = new List<Color>(3);
-    _positionGrid[1] = new List<Color>(3);
-    _positionGrid[2] = new List<Color>(3);
+    _data = new List<Widget>();
+    _yAxisPos = ((_num - 1) / 2).round();
+    _xAxisPos = ((_num - 1) / 2).round();
 
-    for (var i = 0; i < 3; i++) {
-      for (var j = 0; j < 3; j++) {
+    for (var i = 0; i < _num; i++) {
+      for (var j = 0; j < _num; j++) {
         if (i == _yAxisPos && j == _xAxisPos) {
-          _positionGrid[i][j] = Colors.green;
+          _data.add(Container(
+            color: Colors.green,
+          ));
         } else {
-          _positionGrid[i][j] = Colors.black;
+          _data.add(Container(
+            color: Colors.black,
+          ));
         }
       }
     }
   }
 
+  void reloadValues() => {
+        setState(() {
+          _yAxisPos = ((_num - 1) / 2).round();
+          _xAxisPos = ((_num - 1) / 2).round();
+
+          Fluttertoast.showToast(
+              msg: "Te pasaste",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        })
+      };
+
   void setPosition() => {
         setState(() {
-          for (var i = 0; i < 3; i++) {
-            for (var j = 0; j < 3; j++) {
+          _data = <Widget>[];
+          for (var i = 0; i < _num; i++) {
+            for (var j = 0; j < _num; j++) {
               if (i == _yAxisPos && j == _xAxisPos) {
-                _positionGrid[i][j] = Colors.green;
+                _data.add(Container(
+                  color: Colors.green,
+                ));
               } else {
-                _positionGrid[i][j] = Colors.black;
+                _data.add(Container(
+                  color: Colors.black,
+                ));
               }
             }
           }
@@ -52,17 +74,7 @@ class HomePageState extends State<HomePage> {
         setState(() {
           _yAxisPos--;
           if (_yAxisPos < 0) {
-            _yAxisPos = 1;
-            _xAxisPos = 1;
-
-            Fluttertoast.showToast(
-                msg: "Te pasaste",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 16.0);
+            reloadValues();
           }
           setPosition();
         })
@@ -71,18 +83,8 @@ class HomePageState extends State<HomePage> {
   void setRInstruction() => {
         setState(() {
           _xAxisPos++;
-          if (_xAxisPos > 2) {
-            _yAxisPos = 1;
-            _xAxisPos = 1;
-
-            Fluttertoast.showToast(
-                msg: "Te pasaste",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 16.0);
+          if (_xAxisPos > (_num - 1)) {
+            reloadValues();
           }
           setPosition();
         })
@@ -92,17 +94,7 @@ class HomePageState extends State<HomePage> {
         setState(() {
           _xAxisPos--;
           if (_xAxisPos < 0) {
-            _yAxisPos = 1;
-            _xAxisPos = 1;
-
-            Fluttertoast.showToast(
-                msg: "Te pasaste",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 16.0);
+            reloadValues();
           }
           setPosition();
         })
@@ -111,18 +103,8 @@ class HomePageState extends State<HomePage> {
   void setDownInstruction() => {
         setState(() {
           _yAxisPos++;
-          if (_yAxisPos > 2) {
-            _yAxisPos = 1;
-            _xAxisPos = 1;
-
-            Fluttertoast.showToast(
-                msg: "Te pasaste",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 16.0);
+          if (_yAxisPos > (_num - 1)) {
+           reloadValues();
           }
           setPosition();
         })
@@ -140,38 +122,7 @@ class HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
-              child: GridView.count(
-                crossAxisCount: 3,
-                children: <Widget>[
-                  Container(
-                    color: _positionGrid[0][0],
-                  ),
-                  Container(
-                    color: _positionGrid[0][1],
-                  ),
-                  Container(
-                    color: _positionGrid[0][2],
-                  ),
-                  Container(
-                    color: _positionGrid[1][0],
-                  ),
-                  Container(
-                    color: _positionGrid[1][1],
-                  ),
-                  Container(
-                    color: _positionGrid[1][2],
-                  ),
-                  Container(
-                    color: _positionGrid[2][0],
-                  ),
-                  Container(
-                    color: _positionGrid[2][1],
-                  ),
-                  Container(
-                    color: _positionGrid[2][2],
-                  ),
-                ],
-              ),
+              child: GridView.count(crossAxisCount: _num, children: _data),
             ),
             Expanded(
               child: GridView.count(
@@ -183,20 +134,27 @@ class HomePageState extends State<HomePage> {
                   Container(
                     padding: const EdgeInsets.all(8),
                   ),
-                  FlatButton(onPressed: setUpInstruction, child: Icon( Icons.arrow_upward_outlined)),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                  ),
-                  FlatButton(onPressed: setLInstruction, child: Icon( Icons.arrow_back_outlined)),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                  ),
-                  FlatButton(onPressed: setRInstruction, child: Icon( Icons.arrow_forward_outlined)),
+                  FlatButton(
+                      onPressed: setUpInstruction,
+                      child: Icon(Icons.arrow_upward_outlined)),
                   Container(
                     padding: const EdgeInsets.all(8),
                   ),
                   FlatButton(
-                      onPressed: setDownInstruction, child: Icon( Icons.arrow_downward_outlined)),
+                      onPressed: setLInstruction,
+                      child: Icon(Icons.arrow_back_outlined)),
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                  ),
+                  FlatButton(
+                      onPressed: setRInstruction,
+                      child: Icon(Icons.arrow_forward_outlined)),
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                  ),
+                  FlatButton(
+                      onPressed: setDownInstruction,
+                      child: Icon(Icons.arrow_downward_outlined)),
                 ],
               ),
             ),
