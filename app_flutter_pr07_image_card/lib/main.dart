@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: getAplicationRoutes(),
       onGenerateRoute: (RouteSettings settings) {
-        print('Ruta : ${settings.name}');
+        // print('Ruta : ${settings.name}');
         // Si en caso la ruta no existe puedo redireccionar a una que sea estatica
         return MaterialPageRoute(
             builder: (BuildContext context) => AlertPage());
