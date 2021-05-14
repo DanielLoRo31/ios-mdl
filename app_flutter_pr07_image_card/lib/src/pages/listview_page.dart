@@ -9,10 +9,13 @@ class ListPage extends StatefulWidget {
 
 class _ListPageState extends State<ListPage> {
   // nos servira para agregar elementos (imagenes a nuestro listView)
-  List<int> _ListaNumeros = new List();
+
+  List<Map<String, int>> _ListaNumeros = new List();
   ScrollController _scrollController = new ScrollController();
   int _ultimoItem = 0;
   bool _isLoading = false;
+
+  int decimal = 0;
 
   @override
   void initState() {
@@ -44,9 +47,24 @@ class _ListPageState extends State<ListPage> {
       controller: _scrollController,
       itemCount: _ListaNumeros.length, //Cantidad de items que se desea cargar
       itemBuilder: (BuildContext context, int index) {
-        final imagen = _ListaNumeros[index];
+        final imagen = _ListaNumeros[index]['item'];
+        var str = '';
+        switch (_ListaNumeros[index]['type']) {
+          case 0:
+            str = '';
+            break;
+          case 1:
+            str = 'grayscale&&';
+            break;
+          case 2:
+            str = 'blur&&';
+            break;
+          default:
+            break;
+        }
         return FadeInImage(
-          image: NetworkImage('https://picsum.photos/500/300/?image=$imagen'),
+          image: NetworkImage(
+              'https://picsum.photos/500/300/?$str' + 'image=$imagen'),
           placeholder: AssetImage('assets/jar-loading.gif'),
         );
       },
@@ -69,9 +87,16 @@ class _ListPageState extends State<ListPage> {
   }
 
   void agregar10() {
+    if (decimal < 2) {
+      decimal++;
+    } else {
+      decimal = 0;
+    }
+
     for (var i = 0; i < 10; i++) {
       // _ultimoItem++;
-      _ListaNumeros.add(_ultimoItem++);
+      // _ListaNumeros.add({'item': _ultimoItem++, 'type': decimal});
+      _ListaNumeros.add({'item': i, 'type': decimal});
       setState(() {});
     }
   }
