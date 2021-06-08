@@ -10,32 +10,37 @@ class HeaderSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       //padding: const EdgeInsets.symmetric(horizontal: DesignPaddings.paddingL),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          LogoCCWidget(color: Palette.lightGreen, image: Image(
+            width: 80,
+            height: 80,
+            image: AssetImage(LogoPath.ccLogoPath),
+          ),),
+          SizedBox(
+            width: DesignSpacings.spaceM,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              LogoCCWidget(color: Palette.lightGreen, image: Image(
-                width: 50,
-                height: 50,
-                image: AssetImage(LogoPath.ccLogoPath),
-              ),),
+              Text(
+                'Cash Coin',
+                style: TextStyle(fontSize: 38, fontWeight: FontWeight.bold, color: Colors.white.withOpacity(0.8)),
+              ),
               SizedBox(
                 height: DesignSpacings.spaceM,
               ),
               Text(
-                'Cash Coin',
-                style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: Colors.white.withOpacity(0.8)),
+                'Da best fintech',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white60),
               ),
             ],
           ),
           SizedBox(
-            height: DesignSpacings.spaceS,
+            width: DesignSpacings.spaceM,
           ),
-          Text(
-            'Save, Transfer, Learn',
-            style: TextStyle(color: Colors.white54.withOpacity(0.5)),
-          )
         ],
       ),
     );

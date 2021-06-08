@@ -4,12 +4,19 @@ class UserAccount {
   String password;
   String phone;
 
-  UserAccount.fromJson(Map json) :
-        id = json['accountId'],
+  UserAccount({
+    this.id,
+    this.email,
+    this.password,
+    this.phone,
+  });
+
+  UserAccount.fromJson(Map json)
+      : id = json['accountId'],
         email = json["email"],
         password = json['password'],
         phone = json["phone"];
-        // isCompleted = json["isCompleted"] == "true",
+  // isCompleted = json["isCompleted"] == "true",
 }
 
 class UserData {
@@ -20,12 +27,21 @@ class UserData {
   double balance;
   UserAccount userAccount;
 
-  UserData.fromJson(Map json) :
-        id = json['id'],
+  UserData({
+    this.id,
+    this.name,
+    this.lastName,
+    this.code,
+    this.balance,
+    this.userAccount
+  });
+
+  UserData.fromJson(Map json)
+      : id = json['id'],
         name = json["name"],
         lastName = json['lastName'],
         code = json["code"],
         balance = json['balance'],
         userAccount = json['userAccount'];
-        // isCompleted = json["isCompleted"] == "true",
+  // isCompleted = json["isCompleted"] == "true",
 }

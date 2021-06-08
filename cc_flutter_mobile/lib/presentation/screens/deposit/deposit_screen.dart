@@ -4,7 +4,10 @@ import 'package:cc_flutter_mobile/config/design_paddings.dart';
 import 'package:cc_flutter_mobile/config/design_spacings.dart';
 import 'package:cc_flutter_mobile/config/palette.dart';
 // My packages
-import 'package:cc_flutter_mobile/presentation/widgets/deposit_widgets.dart';
+import 'package:cc_flutter_mobile/presentation/screens/deposit/widgets/deposit_card.dart';
+import 'package:cc_flutter_mobile/presentation/screens/deposit/widgets/qrcode_card.dart';
+import 'package:cc_flutter_mobile/presentation/widgets/cards/title_card.dart';
+import 'package:cc_flutter_mobile/presentation/widgets/cards/options_card.dart';
 
 class DepositScreen extends StatefulWidget {
   const DepositScreen({Key key}) : super(key: key);
@@ -30,7 +33,7 @@ class _DepositScreenState extends State<DepositScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             TitleCard(
-              content: 'Check your info and\nmshare to your contact\nto get money',
+              content: 'Check your info and\nshare to your contact\nto get money',
               title: 'Deposit information :D',
               styleType: 'Surprise',
               width: 50,
@@ -49,9 +52,7 @@ class _DepositScreenState extends State<DepositScreen> {
             SizedBox(
               height: 8 * space,
             ),
-            GoToCard(
-              mainText: "Wrong section? ",
-              toGoText: 'Go back to the status screen',
+            OptionsCard(
               onTap: null,
             ),
           ],

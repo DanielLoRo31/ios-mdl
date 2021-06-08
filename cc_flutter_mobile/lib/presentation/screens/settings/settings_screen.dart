@@ -1,10 +1,15 @@
+import 'package:cc_flutter_mobile/presentation/screens/settings/widgets/settings_app_card.dart';
+import 'package:cc_flutter_mobile/presentation/screens/settings/widgets/settings_password_card.dart';
+import 'package:cc_flutter_mobile/presentation/screens/settings/widgets/settings_security_card.dart';
+import 'package:cc_flutter_mobile/presentation/widgets/buttons/custom_button.dart';
+import 'package:cc_flutter_mobile/presentation/widgets/cards/title_card.dart';
+import 'package:cc_flutter_mobile/presentation/widgets/cards/options_card.dart';
 import 'package:flutter/material.dart';
 // Config
 import 'package:cc_flutter_mobile/config/design_paddings.dart';
 import 'package:cc_flutter_mobile/config/design_spacings.dart';
 import 'package:cc_flutter_mobile/config/palette.dart';
 // My packages
-import 'package:cc_flutter_mobile/presentation/widgets/settings_widgets.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -39,29 +44,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SizedBox(
               height: space,
             ),
-            PasswordCardAccount(name: 'USER_NAME', onTap: () => print('taped')),
+            SettingsPasswordCard(
+                name: 'USER_NAME', onTap: () => print('taped')),
             SizedBox(
               height: space,
             ),
-            PasswordCardSecurity(),
+            SettingsSecurityCard(),
             SizedBox(
               height: space,
             ),
-            PasswordCardApp(),
+            SettingsAppCard(),
             SizedBox(
-              height: 2*space,
+              height: 2 * space,
             ),
             CustomButton(title: 'Log out', onPressed: null, buttonType: 2),
             SizedBox(
               height: 0.5 * space,
             ),
-            CustomButton(title: 'Close account', onPressed: null, buttonType: 1),
+            CustomButton(
+                title: 'Close account', onPressed: null, buttonType: 1),
             SizedBox(
               height: 3 * space,
             ),
-            GoToCard(
-              mainText: "Wrong section? ",
-              toGoText: 'Go back to Status screen',
+            OptionsCard(
               onTap: null,
             ),
           ],
