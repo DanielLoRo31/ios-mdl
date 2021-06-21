@@ -15,3 +15,8 @@ type UserData struct {
 	Balance float64 `'json:"balance"`
 	UserAccount UserAccount `json:"account"`
 }
+
+type UserPassUpdate struct {
+	UserAccount UserAccount `json:"currentAccount"`
+	NewPassword string `json:"newPassword"`
+}

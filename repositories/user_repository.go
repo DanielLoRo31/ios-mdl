@@ -36,7 +36,7 @@ func GetUserByEmail(email string) (models.UserData, error) {
 }
 
 func CreateUser(user models.UserData) (sql.Result, error) {
-	fmt.Println("hi")
+	fmt.Println("hi create")
 	dbConnection, err := database.OpenConnection()
 	if err != nil {
 		return nil, err
@@ -54,7 +54,7 @@ func CreateUser(user models.UserData) (sql.Result, error) {
 	return result, err
 }
 
-func UpdateUser(user models.UserData) (sql.Result, error) {
+func UpdateUser(currentEmail string, user models.UserData) (sql.Result, error) {
 	dbConnection, err := database.OpenConnection()
 	if err != nil {
 		return nil, err
@@ -62,27 +62,31 @@ func UpdateUser(user models.UserData) (sql.Result, error) {
 	defer func() {
 		dbConnection.Close()
 	}()
-	result, err := dbConnection.Exec("CALL `db_cashcoin`.`sp_update_user`(?, ?, ?, ?, ?, ?);",
+	result, err := dbConnection.Exec("CALL `db_cashcoin`.`sp_update_user`(?, ?, ?, ?, ?);",
+		currentEmail,
 		user.UserAccount.Email,
-		user.UserAccount.Password,
 		user.UserAccount.Phone,
-		user.ID,
 		user.Name,
 		user.LastName)
 	return result, err
 }
 
-func DeleteUser(id int64) (sql.Result, error) {
+func UpdateUserPassword(user models.UserPassUpdate) (sql.Result, error) {
 	dbConnection, err := database.OpenConnection()
 	if err != nil {
 		return nil, err
 	}
-
 	defer func() {
 		dbConnection.Close()
 	}()
+	result, err := dbConnection.Exec("CALL `db_cashcoin`.`sp_update_user_pass`(?, ?, ?);",
+		user.UserAccount.Email,
+		user.UserAccount.Password,
+		user.NewPassword,)
 
-	result, err := dbConnection.Exec("CALL `db_cashcoin`.`sp_delete_user`(?);", id)
+	fmt.Println("Update pass finished")
+	fmt.Println(result)
+	fmt.Println(err)
 
 	return result, err
 }

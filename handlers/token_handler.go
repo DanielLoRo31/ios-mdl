@@ -14,6 +14,7 @@ func SetTokenCookie(user models.UserAccount, w http.ResponseWriter) {
 	// Setting up token
 	claims := &middleware.Clamis{
 		Email: user.Email,
+		// ID: user.ID,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},

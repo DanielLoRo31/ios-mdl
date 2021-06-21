@@ -2,10 +2,12 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/Dall06/cashcoin-api-mysql/models"
 	"github.com/Dall06/cashcoin-api-mysql/repositories"
+
 	// "github.com/Dall06/cashcoin-api-mysql/utils"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -42,6 +44,7 @@ func SaveUserHandler(w http.ResponseWriter, r *http.Request) {
 	// consult
 	result, err := repositories.CreateUser(user)
 	if err != nil {
+		fmt.Println("Error consult")
 		RespondWithInternalServerError(err, w)
 		return
 	}
@@ -49,6 +52,7 @@ func SaveUserHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func EditUserHandler(w http.ResponseWriter, r *http.Request) {
+	email := mux.Vars(r)["email"]
 	var validationStatus bool = ValidateTokenCookie(w, r)
 	if validationStatus == false {
 		RespondWithInternalServerError(validationStatus, w)
@@ -61,11 +65,11 @@ func EditUserHandler(w http.ResponseWriter, r *http.Request) {
 		RespondWithInternalServerError(err, w)
 		return
 	}
-	if user.ID <= 0 {
-		RespondWithBadRequest("Bad ID", w)
+	if user.UserAccount.Email == "" {
+		RespondWithBadRequest("Email", w)
 	}
 
-	result, err := repositories.UpdateUser(user)
+	result, err := repositories.UpdateUser(email, user)
 	if err != nil {
 		RespondWithInternalServerError(err, w)
 		return
@@ -73,22 +77,28 @@ func EditUserHandler(w http.ResponseWriter, r *http.Request) {
 	RespondWithSuccess(result, w)
 }
 
-func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
-	var user models.UserData
+func EditUserPassHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Update pass")
+	var validationStatus bool = ValidateTokenCookie(w, r)
+	if validationStatus == false {
+		fmt.Println("Err Token")
+		RespondWithInternalServerError(validationStatus, w)
+		return
+	}
+	var user models.UserPassUpdate
+
 	err := json.NewDecoder(r.Body).Decode(&user)
-
 	if err != nil {
+		fmt.Println(err)
 		RespondWithInternalServerError(err, w)
 		return
 	}
-	if user.ID <= 0 {
-		RespondWithBadRequest("Bad ID", w)
-	}
-	result, err := repositories.DeleteUser(user.ID)
+
+	result, err := repositories.UpdateUserPassword(user)
 	if err != nil {
+		fmt.Println("Err Consult")
 		RespondWithInternalServerError(err, w)
 		return
 	}
 	RespondWithSuccess(result, w)
 }
-

@@ -11,8 +11,8 @@ import (
 func SetUserRoutes(router *mux.Router) {
 	middleware.EnableCORS(router)
 	subRoute := router.PathPrefix("/api/user").Subrouter()
-	subRoute.HandleFunc("/find/{id}", handlers.FindUserByEmailHandler).Methods(http.MethodGet)
+	subRoute.HandleFunc("/find/{email}", handlers.FindUserByEmailHandler).Methods(http.MethodGet)
 	subRoute.HandleFunc("/save", handlers.SaveUserHandler).Methods(http.MethodPost)
-	subRoute.HandleFunc("/edit", handlers.EditUserHandler).Methods(http.MethodPut)
-	subRoute.HandleFunc("/delete", handlers.DeleteUserHandler).Methods(http.MethodDelete)
+	subRoute.HandleFunc("/edit/{email}", handlers.EditUserHandler).Methods(http.MethodPut)
+	subRoute.HandleFunc("/edit", handlers.EditUserPassHandler).Methods(http.MethodPut)
 }
