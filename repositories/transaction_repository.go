@@ -53,6 +53,7 @@ func GetUserTransactions(codeUser string) ([]models.TransactionUser, error) {
 
 func MakeTransaction(transaction models.TransactionDetail) (sql.Result, error) {
 	// open db connection, if error exists breaks
+	fmt.Println("Hello make transaction!")
 	dbConnection, err := database.OpenConnection()
 	if err != nil {
 		return nil, err
