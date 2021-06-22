@@ -12,7 +12,7 @@ class EditFormCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(30),
         child: EditForm(),
       ),
     );

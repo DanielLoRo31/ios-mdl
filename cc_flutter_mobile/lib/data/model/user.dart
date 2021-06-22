@@ -11,11 +11,22 @@ class UserAccount {
     this.phone,
   });
 
-  UserAccount.fromJson(Map json)
-      : id = json['accountId'],
-        email = json["email"],
-        password = json['password'],
-        phone = json["phone"];
+  factory UserAccount.fromJson(Map<String, dynamic> parsedJson) {
+    return UserAccount(
+        id: parsedJson['accountId'],
+        email: parsedJson['email'],
+        password: parsedJson['password'],
+        phone: parsedJson['phone']);
+  }
+
+  Map toJson() {
+    return {
+      'accountId': id,
+      'email': email,
+      'password': password,
+      'phone': phone
+    };
+  }
   // isCompleted = json["isCompleted"] == "true",
 }
 
@@ -24,24 +35,59 @@ class UserData {
   String name;
   String lastName;
   String code;
-  double balance;
+  num balance;
   UserAccount userAccount;
 
-  UserData({
-    this.id,
-    this.name,
-    this.lastName,
-    this.code,
-    this.balance,
-    this.userAccount
-  });
+  UserData(
+      {this.id,
+      this.name,
+      this.lastName,
+      this.code,
+      this.balance,
+      this.userAccount});
 
-  UserData.fromJson(Map json)
-      : id = json['id'],
-        name = json["name"],
-        lastName = json['lastName'],
-        code = json["code"],
-        balance = json['balance'],
-        userAccount = json['userAccount'];
+  factory UserData.fromJson(Map<String, dynamic> parsedJson) {
+    print(parsedJson);
+    return UserData(
+        id: parsedJson['id'],
+        name: parsedJson['name'],
+        lastName: parsedJson['lastName'],
+        code: parsedJson['Code'],
+        balance: parsedJson['Balance'],
+        userAccount: UserAccount.fromJson(parsedJson['account']));
+  }
+
+  Map toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'lastName': lastName,
+      'Code': code,
+      'Balance': balance,
+      'account': userAccount
+    };
+  }
   // isCompleted = json["isCompleted"] == "true",
+}
+
+class UserPassUpdate {
+  String newPassword;
+  UserAccount userAccount;
+
+  UserPassUpdate({this.newPassword, this.userAccount});
+
+  factory UserPassUpdate.fromJson(Map<String, dynamic> parsedJson) {
+    print(parsedJson);
+    return UserPassUpdate(
+        newPassword: parsedJson['newPassword'],
+        userAccount: UserAccount.fromJson(parsedJson['currentAccount']));
+  }
+
+  Map toJson() {
+    return {
+      'newPassword': newPassword,
+      'currentAccount': userAccount
+    };
+  }
+// isCompleted = json["isCompleted"] == "true",
 }

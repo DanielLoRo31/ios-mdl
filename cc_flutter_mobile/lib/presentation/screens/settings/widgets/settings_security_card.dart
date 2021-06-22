@@ -8,6 +8,11 @@ class SettingsSecurityCard extends StatelessWidget {
 
   const SettingsSecurityCard({this.onTapPassword, this.onTap2FA});
 
+  _throwError(BuildContext context, String message) {
+    final snackBar = SnackBar(content: Text(message));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -34,7 +39,7 @@ class SettingsSecurityCard extends StatelessWidget {
                 Icons.security,
                 color: Colors.white24,
               ),
-              onTap: this.onTap2FA,
+              onTap: () => _throwError(context, 'Not implemented'),
             ),
           ],
         ),

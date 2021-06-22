@@ -1,8 +1,8 @@
 import 'package:cc_flutter_mobile/config/palette.dart';
-import 'package:cc_flutter_mobile/presentation/screens/signup/widgets/signup_form.dart';
+import 'package:cc_flutter_mobile/presentation/screens/home/widgets/signup_form.dart';
 import 'package:flutter/material.dart';
 
-class SgnUpFormCard extends StatelessWidget {
+class SignUpFormCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(

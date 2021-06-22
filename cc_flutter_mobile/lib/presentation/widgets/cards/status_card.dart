@@ -1,17 +1,14 @@
 import 'package:cc_flutter_mobile/config/design_spacings.dart';
 import 'package:cc_flutter_mobile/config/palette.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+class StatusCard extends StatelessWidget {
+  final num quantity;
+  final String email;
+  final Function onPressed;
 
-class StatusCard extends StatefulWidget {
-  @override
-  _StatusCardState createState() => _StatusCardState();
-}
-
-
-class _StatusCardState extends State<StatusCard> {
-  double _quantity = 0.0;
-  String _email = 'No email from state';
+  StatusCard({@required this.quantity, @required this.email, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +16,12 @@ class _StatusCardState extends State<StatusCard> {
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     var space = _height > 650 ? DesignSpacings.spaceM : DesignSpacings.spaceS;
 
-
     return Card(
-      elevation: 4,
+      elevation: 8,
       color: Palette.darkGreen,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Container(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -31,6 +29,7 @@ class _StatusCardState extends State<StatusCard> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
                   'Account resume',
@@ -38,7 +37,13 @@ class _StatusCardState extends State<StatusCard> {
                     color: Colors.white54,
                     fontSize: 14,
                   ),
-                )
+                ),
+                IconButton(
+                  icon: Icon(Icons.autorenew),
+                  iconSize: 20,
+                  onPressed: onPressed,
+                  color: Colors.white70,
+                ),
               ],
             ),
             SizedBox(
@@ -47,7 +52,7 @@ class _StatusCardState extends State<StatusCard> {
             Row(
               children: <Widget>[
                 Text(
-                  r'$ ' + this._quantity.toString(),
+                  r'$ ' + this.quantity.toString(),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
@@ -57,7 +62,7 @@ class _StatusCardState extends State<StatusCard> {
               ],
             ),
             SizedBox(
-              height: 2* space,
+              height: 2 * space,
             ),
             Row(
               children: <Widget>[
@@ -73,7 +78,7 @@ class _StatusCardState extends State<StatusCard> {
                   width: space,
                 ),
                 Text(
-                  this._email,
+                  this.email,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 15,

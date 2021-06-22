@@ -1,8 +1,8 @@
 import 'package:cc_flutter_mobile/bloc/user/edit/data_blocs.dart';
 import 'package:cc_flutter_mobile/config/design_spacings.dart';
-import 'package:cc_flutter_mobile/config/palette.dart';
 import 'package:cc_flutter_mobile/presentation/widgets/buttons/custom_button.dart';
-import 'package:cc_flutter_mobile/presentation/widgets/textfields/fields_decoration.dart';
+import 'package:cc_flutter_mobile/presentation/widgets/custom_progress_indicator.dart';
+import 'package:cc_flutter_mobile/presentation/widgets/textfields/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,39 +13,6 @@ class EditForm extends StatefulWidget {
 
 class _EditFormState extends State<EditForm> {
   final _formKey = GlobalKey<FormState>();
-  bool _obscureText = true;
-  IconData _suffixIcon = Icons.visibility_off;
-
-  Widget _ifIsPassword(String isPassword) {
-    if (isPassword == 'no') {
-      return null;
-    }
-    return IconButton(
-      onPressed: _changePassword,
-      icon: Icon(
-        _suffixIcon,
-        size: 18,
-        color: Colors.white70,
-      ),
-    );
-  }
-
-  void _changePassword() {
-    if (_obscureText) {
-      setState(() {
-        _obscureText = false;
-        _suffixIcon = Icons.visibility;
-      });
-      return;
-    }
-    if (!_obscureText) {
-      setState(() {
-        _obscureText = true;
-        _suffixIcon = Icons.visibility_off;
-      });
-      return;
-    }
-  }
 
   void _showSnackBar(BuildContext context, String message) {
     final snackBar = SnackBar(content: Text(message));
@@ -55,14 +22,13 @@ class _EditFormState extends State<EditForm> {
   Widget _submitChangesButton() {
     return BlocBuilder<EditDataBloc, EditDataState>(builder: (context, state) {
       return state.formStatus is FormSubmitting
-          ? CircularProgressIndicator()
+          ? CustomProgressIndicator()
           : CustomButton(
-          title: 'Sign Up',
+          title: 'Confirm Changes',
           onPressed: () {
             if (_formKey.currentState.validate()) {
               context.read<EditDataBloc>().add(ChangeSubmitted());
             }
-            Navigator.of(context).pushNamed('status');
           },
           buttonType: 4);
     });
@@ -73,18 +39,12 @@ class _EditFormState extends State<EditForm> {
       return Material(
         elevation: 8,
         color: Colors.transparent,
-        child: TextFormField(
-          obscureText: false,
-          decoration: FieldsDecorations(
-              label: 'Email',
-              prefixIconData: Icons.email,
-              suffixIconData: _ifIsPassword('no'))
-              .buildTextFieldDecoration(),
-          style: TextStyle(color: Colors.white70, fontSize: 14.0),
-          validator: null,
+        child: CustomTextField(
+          label: 'email',
+          prefixIconData: Icons.email,
+          initialValue: state.email,
           onChanged: (value) => context.read<EditDataBloc>().add(
-            EmailChanged(email: value),
-          ),
+            EmailChanged(email: value),),
         ),
       );
     });
@@ -95,17 +55,12 @@ class _EditFormState extends State<EditForm> {
       return Material(
         elevation: 8,
         color: Colors.transparent,
-        child: TextFormField(
-          obscureText: false,
-          decoration: FieldsDecorations(
-              label: 'Phone',
-              prefixIconData: Icons.phone,
-              suffixIconData: _ifIsPassword('no'))
-              .buildTextFieldDecoration(),
-          style: TextStyle(color: Colors.white70, fontSize: 14.0),
+        child: CustomTextField(
+          label: 'phone',
+          prefixIconData: Icons.phone,
+          initialValue: state.email,
           onChanged: (value) => context.read<EditDataBloc>().add(
-            PhoneChanged(phone: value),
-          ),
+            PhoneChanged(phone: value),),
         ),
       );
     });
@@ -116,14 +71,10 @@ class _EditFormState extends State<EditForm> {
       return Material(
         elevation: 8,
         color: Colors.transparent,
-        child: TextFormField(
-          obscureText: false,
-          decoration: FieldsDecorations(
-              label: 'Name',
-              prefixIconData: Icons.person,
-              suffixIconData: _ifIsPassword('no'))
-              .buildTextFieldDecoration(),
-          style: TextStyle(color: Colors.white70, fontSize: 14.0),
+        child: CustomTextField(
+          label: 'name',
+          prefixIconData: Icons.person,
+          initialValue: state.name,
           onChanged: (value) => context.read<EditDataBloc>().add(
             NameChanged(name: value),
           ),
@@ -137,14 +88,10 @@ class _EditFormState extends State<EditForm> {
       return Material(
         elevation: 8,
         color: Colors.transparent,
-        child: TextFormField(
-          obscureText: false,
-          decoration: FieldsDecorations(
-              label: 'Last name',
-              prefixIconData: Icons.person,
-              suffixIconData: _ifIsPassword('no'))
-              .buildTextFieldDecoration(),
-          style: TextStyle(color: Colors.white70, fontSize: 14.0),
+        child: CustomTextField(
+          label: 'last name',
+          prefixIconData: Icons.person,
+          initialValue: state.lastName,
           onChanged: (value) => context.read<EditDataBloc>().add(
             LastNameChanged(lastName: value),
           ),
@@ -165,13 +112,16 @@ class _EditFormState extends State<EditForm> {
         if (formStatus is SubmissionFailed) {
           _showSnackBar(context, formStatus.exception.toString());
         }
+        if(formStatus is SubmissionSuccess) {
+          Navigator.of(context).pop();
+        }
       },
       child: Form(
         key: _formKey,
         child: Column(
           children: [
             Text(
-              'Fill the information to authenticate',
+              'Fill the information that you want to Change',
               style: TextStyle(color: Colors.white54, fontSize: 16.0),
             ),
             SizedBox(

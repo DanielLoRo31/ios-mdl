@@ -5,20 +5,29 @@ import 'package:cc_flutter_mobile/config/palette.dart';
 
 class OptionsCard extends StatelessWidget {
   final Function onTap;
+  final String primaryText;
+  final String blueText;
 
-  OptionsCard({@required this.onTap});
+  OptionsCard(
+      {@required this.onTap,
+      @required this.primaryText,
+      @required this.blueText});
 
   RichText _buildBottomRichText() {
     return RichText(
       text: TextSpan(
-        style: TextStyle(color: Colors.white60, fontSize: 14.0,),
+        style: TextStyle(
+          color: Colors.white60,
+          fontSize: 16.0,
+        ),
         children: <TextSpan>[
-          TextSpan(text: 'Already Have an account?'),
+          TextSpan(text: primaryText),
           TextSpan(
-              text: ' Log In',
-              style: TextStyle(color: Colors.blue,),
-              recognizer: TapGestureRecognizer()
-                ..onTap = this.onTap),
+            text: ' ' + blueText,
+            style: TextStyle(
+              color: Palette.grayDark,
+            ),
+          ),
         ],
       ),
     );
@@ -26,17 +35,16 @@ class OptionsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var height =
-        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
-
     return Card(
-      color: Palette.lightBlack,
-      margin: EdgeInsets.only(bottom: 25),
+      color: Palette.lightGreen,
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        child: Center(child: _buildBottomRichText()),
+      child: InkWell(
+        onTap: this.onTap,
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          child: Center(child: _buildBottomRichText()),
+        ),
       ),
     );
   }

@@ -1,5 +1,9 @@
 import 'package:cc_flutter_mobile/bloc/transaction/make/make_transaction_blocs.dart';
+import 'package:cc_flutter_mobile/bloc/user/load/load_user_blocs.dart';
 import 'package:cc_flutter_mobile/data/repositories/transaction_repository.dart';
+import 'package:cc_flutter_mobile/data/repositories/user_repository.dart';
+import 'package:cc_flutter_mobile/presentation/widgets/appbar_custom.dart';
+import 'package:cc_flutter_mobile/presentation/widgets/custom_progress_indicator.dart';
 import 'package:flutter/material.dart';
 // Config
 import 'package:cc_flutter_mobile/config/design_paddings.dart';
@@ -20,52 +24,82 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
+  Widget _buildStatusCard() {
+    return BlocBuilder<LoadUserBloc, LoadUserState>(builder: (context, state) {
+      final status = state.loadStatus;
+      if (status is InitialUserStatus) {
+        context.read<LoadUserBloc>().add(FetchUserStart());
+      }
+      if (status is LoadingUserStatus) {
+        context.read<LoadUserBloc>().add(FetchUser());
+      }
+      if (status is LoadedUserStatus) {
+        return TransactionStatusCard(
+          quantity: status.user.balance,
+        );
+      }
+      return Center(
+        child: CustomProgressIndicator(),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var height =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     var space = height > 650 ? DesignSpacings.spaceM : DesignSpacings.spaceS;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Palette.blackBg,
-      body: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) => MakeTransactionBloc(
-              transactionRepository: context.read<TransactionRepository>(),
-            ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => MakeTransactionBloc(
+            transactionRepository: context.read<TransactionRepository>(),
           ),
-        ],
-        child: Container(
+        ),
+        BlocProvider(
+          create: (context) => LoadUserBloc(
+            userRepository: context.read<UserRepository>(),
+          ),
+        ),
+      ],
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Palette.blackBg,
+        appBar: PreferredSize(
+            preferredSize: Size.fromHeight(345),
+            child: AppBarCustom(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  TitleCard(
+                    content: 'Send money to anyone\nyou want',
+                    title: 'Make a transaction *-*',
+                    styleType: 'Surprise',
+                    width: 50,
+                    height: 50,
+                    isTitle: false,
+                  ),
+                  SizedBox(height: space,),
+                  _buildStatusCard(),
+                  SizedBox(height: space,),
+                  OptionsCard(
+                    onTap: () => Navigator.of(context).pop(),
+                    primaryText: 'Nothing to check?',
+                    blueText: 'Tap me to go back',
+                  ),
+                ],
+              )
+            )),
+        body: Container(
           padding: EdgeInsets.symmetric(horizontal: DesignPaddings.paddingL),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              TitleCard(
-                content: 'Send money to anyone\nyou want',
-                title: 'Make a transaction *-*',
-                styleType: 'Surprise',
-                width: 50,
-                fSize1: 18,
-                height: 50,
-                fSize2: 16,
-              ),
-              SizedBox(
-                height: space,
-              ),
-              TransactionStatusCard(),
-              SizedBox(
-                height: space,
-              ),
+              SizedBox(height: 2.5*space,),
               TransactionFormCard(),
-              SizedBox(
-                height: 6 * space,
-              ),
-              OptionsCard(
-                onTap: null,
-              ),
             ],
           ),
         ),

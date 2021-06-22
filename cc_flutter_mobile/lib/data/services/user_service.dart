@@ -1,43 +1,91 @@
-import 'dart:convert';
+import 'dart:convert' show jsonDecode, jsonEncode;
 import 'package:cc_flutter_mobile/data/model/user.dart';
 import 'package:cc_flutter_mobile/data/services/api_service.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class UserService {
-  Future<UserData> fetchUserByEmail(String email) async {
+  Future<dynamic> fetchUserByEmail() async {
     try {
-      final response = await get(Uri.parse(ApiService.baseUrl + "/user/$email"));
-      return jsonDecode(response.body) as UserData;
+      final storage = new FlutterSecureStorage();
+      String currentToken = await storage.read(key: 'set-token');
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(currentToken);
+      String email = decodedToken['email'];
+
+      final response = await get(
+          Uri.parse(ApiService.baseUrl + "/user/find/$email"),
+          headers: {
+            "Content-Type": "application/json",
+          });
+      if (response.statusCode != 200) {
+        throw Exception('invalid request');
+      }
+      return UserData.fromJson(jsonDecode(response.body));
     } catch (e) {
       return null;
     }
   }
 
-  Future<Map> addUser(UserData user) async {
+  Future<bool> addUser(UserData user) async {
     try {
-      final response = await post(Uri.parse(ApiService.baseUrl + "/user"), body: user);
-      return jsonDecode(response.body);
-    } catch (e) {
-      return null;
+      final response = await post(Uri.parse(ApiService.baseUrl + "/user/save"),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(user.toJson()));
+      if (response.statusCode != 200) {
+        return null;
+      }
+      return true;
+    } catch (error) {
+      throw Exception(error);
     }
   }
 
-  Future<Map> updateUser(UserData user) async {
+  Future<bool> updateUser(UserData user) async {
     try {
-      final response = await put(Uri.parse(ApiService.baseUrl + "/user"), body: user);
-      return jsonDecode(response.body);
-    } catch (e) {
-      return null;
+      final storage = new FlutterSecureStorage();
+      String currentToken = await storage.read(key: 'set-token');
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(currentToken);
+      String email = decodedToken['email'];
+
+      final response = await put(
+          Uri.parse(ApiService.baseUrl + "/user/edit/$email"),
+          headers: {
+            "Content-Type": "application/json",
+            "Cookie": "token=$currentToken;"
+          },
+          body: jsonEncode(user.toJson()));
+      if (response.statusCode != 200) {
+        print(response.statusCode);
+        return false;
+      }
+      return true;
+    } catch (error) {
+      print("service update err");
+      print(error);
+      throw Exception(error);
     }
   }
 
-  Future<Map> deleteUser(int id) async {
+  Future<bool> updateUserPassword(UserPassUpdate user) async {
     try {
-      final response = await delete(Uri.parse(ApiService.baseUrl + "/user"));
-      return jsonDecode(response.body);
-    } catch (er) {
-      return null;
+      final storage = new FlutterSecureStorage();
+      String currentToken = await storage.read(key: 'set-token');
+
+      final response = await put(
+          Uri.parse(ApiService.baseUrl + "/user/edit"),
+          headers: {
+            "Content-Type": "application/json",
+            "Cookie": "token=$currentToken;"
+          },
+          body: jsonEncode(user.toJson()));
+      if (response.statusCode != 200) {
+        print(response.body);
+        return false;
+      }
+      return true;
+    } catch (error) {
+      throw Exception(error);
     }
   }
-
 }

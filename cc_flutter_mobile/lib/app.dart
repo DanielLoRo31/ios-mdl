@@ -23,7 +23,7 @@ class App extends StatelessWidget {
       child: MaterialApp(
         title: 'CashCoin',
         debugShowCheckedModeBanner: false,
-        initialRoute: 'list',
+        initialRoute: '/',
         routes: AppRouter.generateRoutes(),
       ),
     );

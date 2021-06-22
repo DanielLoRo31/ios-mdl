@@ -3,14 +3,11 @@ import 'package:cc_flutter_mobile/config/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class QRCodeCard extends StatefulWidget {
-  const QRCodeCard({Key key}) : super(key: key);
+class QRCodeCard extends StatelessWidget {
+  final String stringToQR;
 
-  @override
-  _QRCodeCardState createState() => _QRCodeCardState();
-}
+  QRCodeCard({@required this.stringToQR});
 
-class _QRCodeCardState extends State<QRCodeCard> {
   @override
   Widget build(BuildContext context) {
     var height =
@@ -34,10 +31,10 @@ class _QRCodeCardState extends State<QRCodeCard> {
               height: space,
             ),
             QrImage(
-              data: "HERE_LIES_YOUR_CODE",
+              data: stringToQR,
               version: QrVersions.auto,
               backgroundColor: Colors.white60,
-              size: 100.0,
+              size: 200.0,
             ),
           ],
         ),

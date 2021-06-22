@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 // Config
 import 'package:cc_flutter_mobile/config/palette.dart';
 
-class SettingsPasswordCard extends StatelessWidget {
+class SettingsEditCard extends StatelessWidget {
   final String name;
   final VoidCallback onTap;
 
-  const SettingsPasswordCard({@required this.name, @required this.onTap})
+  const SettingsEditCard({@required this.name, @required this.onTap})
       : assert(name != null, onTap != null);
 
   @override

@@ -12,9 +12,13 @@ class LoadingStatus extends LoadStatus {}
 
 class LoadedStatus extends LoadStatus {
   final List<TransactionUser> transactions;
+  final String opinion;
+  final String code;
 
-  LoadedStatus({this.transactions});
+  LoadedStatus({this.transactions, this.opinion, this.code});
 }
+
+class FinishedStatus extends LoadStatus {}
 
 class ErrorLoad extends LoadStatus {
   final Exception exception;

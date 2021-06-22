@@ -8,7 +8,8 @@ class InitialFormStatus extends FormStatus {
 
 class FormSubmitting extends FormStatus {}
 
-class SubmissionSuccess extends FormStatus {}
+class SubmissionSuccess extends FormStatus {
+}
 
 class SubmissionFailed extends FormStatus {
   final Exception exception;

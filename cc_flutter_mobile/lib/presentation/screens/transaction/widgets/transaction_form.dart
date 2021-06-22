@@ -2,7 +2,8 @@ import 'package:cc_flutter_mobile/bloc/transaction/make/make_transaction_blocs.d
 import 'package:cc_flutter_mobile/config/design_spacings.dart';
 import 'package:cc_flutter_mobile/config/palette.dart';
 import 'package:cc_flutter_mobile/presentation/widgets/buttons/custom_button.dart';
-import 'package:cc_flutter_mobile/presentation/widgets/textfields/fields_decoration.dart';
+import 'package:cc_flutter_mobile/presentation/widgets/custom_progress_indicator.dart';
+import 'package:cc_flutter_mobile/presentation/widgets/textfields/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,10 +15,9 @@ class TransactionForm extends StatefulWidget {
 class _TransactionFormState extends State<TransactionForm> {
   final _formKey = GlobalKey<FormState>();
   bool _isBankAccount = false;
-  IconData _accountTypeIcon = Icons.code;
-  String _accountTypeText = 'Account Code';
+  String _accountTypeText = 'account Code';
 
-  void _showSnackBar(BuildContext context, String message) {
+  void _throwError(BuildContext context, String message) {
     final snackBar = SnackBar(content: Text(message));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
@@ -26,16 +26,20 @@ class _TransactionFormState extends State<TransactionForm> {
     return BlocBuilder<MakeTransactionBloc, MakeTransactionState>(
         builder: (context, state) {
       return state.formStatus is FormSubmitting
-          ? CircularProgressIndicator()
+          ? CustomProgressIndicator()
           : CustomButton(
-              title: 'Sign Up',
+              title: 'Complete transaction',
               onPressed: () {
+                context.read<MakeTransactionBloc>().add(
+                  OriginCodeChanged(code: 'hardcoded'),);
+                context.read<MakeTransactionBloc>().add(
+                  TransactionTypeIDChanged(transactionType: 1),);
+
                 if (_formKey.currentState.validate()) {
                   context
                       .read<MakeTransactionBloc>()
                       .add(TransactionSubmitted());
                 }
-                Navigator.of(context).pushNamed('status');
               },
               buttonType: 4);
     });
@@ -47,17 +51,14 @@ class _TransactionFormState extends State<TransactionForm> {
       return Material(
         elevation: 8,
         color: Colors.transparent,
-        child: TextFormField(
-          keyboardType: TextInputType.number,
-          obscureText: false,
-          decoration: FieldsDecorations(
-            label: 'Email',
-            prefixIconData: Icons.email,
-          ).buildTextFieldDecoration(),
-          style: TextStyle(color: Colors.white70, fontSize: 14.0),
+        child: CustomTextField(
+          label: 'quantity',
+          prefixIconData: Icons.money,
+          keyBoardType: TextInputType.number,
+          validator: (value) =>
+          state.isValidQuantity ? null : 'invalid quantity, it must be up to 30 mxn',
           onChanged: (value) => context.read<MakeTransactionBloc>().add(
-                QuantityChanged(quantity: double.parse(value)),
-              ),
+            QuantityChanged(quantity: double.parse(value)),),
         ),
       );
     });
@@ -69,16 +70,13 @@ class _TransactionFormState extends State<TransactionForm> {
       return Material(
         elevation: 8,
         color: Colors.transparent,
-        child: TextFormField(
-          obscureText: false,
-          decoration: FieldsDecorations(
-            label: 'Phone',
-            prefixIconData: _accountTypeIcon,
-          ).buildTextFieldDecoration(),
-          style: TextStyle(color: Colors.white70, fontSize: 14.0),
+        child: CustomTextField(
+          label: 'destination',
+          prefixIconData: Icons.code,
+          validator: (value) =>
+          state.isValidCode ? null : 'invalid code',
           onChanged: (value) => context.read<MakeTransactionBloc>().add(
-                DestinationCodeChanged(code: value),
-              ),
+            DestinationCodeChanged(code: value),),
         ),
       );
     });
@@ -90,13 +88,9 @@ class _TransactionFormState extends State<TransactionForm> {
       return Material(
         elevation: 8,
         color: Colors.transparent,
-        child: TextFormField(
-          obscureText: false,
-          decoration: FieldsDecorations(
-            label: 'Name',
-            prefixIconData: Icons.person,
-          ).buildTextFieldDecoration(),
-          style: TextStyle(color: Colors.white70, fontSize: 14.0),
+        child: CustomTextField(
+          label: 'concept',
+          prefixIconData: Icons.description,
           onChanged: (value) => context.read<MakeTransactionBloc>().add(
                 ConceptChanged(concept: value),
               ),
@@ -115,7 +109,10 @@ class _TransactionFormState extends State<TransactionForm> {
       listener: (context, state) {
         final formStatus = state.formStatus;
         if (formStatus is SubmissionFailed) {
-          _showSnackBar(context, formStatus.exception.toString());
+          _throwError(context, formStatus.exception.toString());
+        }
+        if(formStatus is SubmissionSuccess) {
+          Navigator.of(context).pop();
         }
       },
       child: Form(
@@ -131,30 +128,13 @@ class _TransactionFormState extends State<TransactionForm> {
               ),
               SwitchListTile(
                 activeColor: Palette.lightGreen,
+                inactiveThumbColor: Palette.darkGreen,
                 value: _isBankAccount,
                 title: Text(
                   _accountTypeText,
                   style: TextStyle(color: Colors.white),
                 ),
-                onChanged: (bool value) {
-                  if(value) {
-                    setState(() {
-                      _isBankAccount = value;
-                      _accountTypeIcon = Icons.credit_card;
-                      _accountTypeText = 'Bank account';
-                    });
-                    _showSnackBar(context, 'Method not supported');
-                    return;
-                  }
-                  if(!value) {
-                    setState(() {
-                      _isBankAccount = value;
-                      _accountTypeIcon = Icons.code;
-                      _accountTypeText = 'Account Code';
-                    });
-                    return;
-                  }
-                },
+                onChanged: (_) => _throwError(context, 'Not implemented'),
               ),
               SizedBox(
                 height: space,

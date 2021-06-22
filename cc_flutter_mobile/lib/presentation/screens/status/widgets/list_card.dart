@@ -3,11 +3,12 @@ import 'package:cc_flutter_mobile/config/palette.dart';
 import 'package:flutter/material.dart';
 
 class ListCard extends StatefulWidget {
-  final int transactionType;
+  final String transactionType;
   final int transactionStatus;
   final String concept;
-  final double quantity;
+  final num quantity;
   final String from;
+  final String to;
   final String date;
 
   const ListCard({
@@ -16,7 +17,8 @@ class ListCard extends StatefulWidget {
     @required this.concept,
     @required this.quantity,
     @required this.from,
-    @required this.date
+    @required this.date,
+    @required this.to,
   });
 
   @override
@@ -30,7 +32,7 @@ class _ListCardState extends State<ListCard> {
   void _changeIconColor () {
     if(widget.transactionStatus == 0) { //Pending
       setState(() {
-        _iconColor = Palette.yellowWarning;
+        _iconColor = Palette.greenConfirm;
       });
       return;
     }
@@ -49,12 +51,12 @@ class _ListCardState extends State<ListCard> {
   }
 
   void _whichIconIs () {
-    if(widget.transactionType == 0) {
+    if(widget.transactionType == 'Deposit') {
       setState(() {
         _icon = Icons.trending_up;
       });
     }
-    if(widget.transactionType == 1) {
+    if(widget.transactionType == 'Transfer') {
       setState(() {
         _icon = Icons.trending_down;
       });
@@ -93,6 +95,7 @@ class _ListCardState extends State<ListCard> {
             children: [
               Text('Quantity ${widget.quantity}', style: TextStyle(color: Colors.white70)),
               Text('From ${widget.from}', style: TextStyle(color: Colors.white70)),
+              Text('To ${widget.to}', style: TextStyle(color: Colors.white70)),
               Text('Date ${widget.date}', style: TextStyle(color: Colors.white70)),
             ],
           ),

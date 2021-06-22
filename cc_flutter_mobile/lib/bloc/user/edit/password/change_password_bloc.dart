@@ -1,8 +1,11 @@
 import 'package:cc_flutter_mobile/bloc/user/edit/submit_password.dart';
+import 'package:cc_flutter_mobile/data/model/user.dart';
 import 'package:cc_flutter_mobile/data/repositories/user_repository.dart';
 import 'package:cc_flutter_mobile/bloc/user/edit/password/change_password_event.dart';
 import 'package:cc_flutter_mobile/bloc/user/edit/password/change_password_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState> {
   final UserRepository userRepository;
@@ -28,11 +31,30 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState> 
       yield state.copyWith(formStatus: FormSubmitting());
 
       try {
-        await userRepository.editAccount();
+        if(state.newPassword != state.confirmPassword) {
+          throw Exception('Password do not match');
+        }
+
+        final storage = new FlutterSecureStorage();
+        String currentToken = await storage.read(key: 'set-token');
+        Map<String, dynamic> decodedToken = JwtDecoder.decode(currentToken);
+        String email = decodedToken['email'];
+
+        final UserAccount userAccount = new UserAccount(
+          email: email,
+          password: state.currentPassword
+        );
+        final UserPassUpdate userPassUpdate = new UserPassUpdate(
+          userAccount: userAccount,
+          newPassword: state.newPassword,
+        );
+
+        await userRepository.changeAccountPassword(userPassUpdate);
         yield state.copyWith(formStatus: SubmissionSuccess());
       } catch (e) {
         yield state.copyWith(formStatus: SubmissionFailed(e));
       }
+      yield state.copyWith(formStatus: InitialFormStatus());
     }
   }
 }

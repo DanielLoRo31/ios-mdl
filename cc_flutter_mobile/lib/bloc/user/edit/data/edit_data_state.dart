@@ -1,9 +1,17 @@
 import 'package:cc_flutter_mobile/bloc/user/edit/submit_data.dart';
+import 'package:cc_flutter_mobile/config/extra_constants.dart';
 
 class EditDataState {
   final String email;
+  bool get isValidEmail {
+    final Pattern _pattern = ExtraConstants.emailRegexPattern;
+    RegExp regExp = new RegExp(_pattern);
+    if(!regExp.hasMatch(email)) {
+      return false;
+    }
+    return true;
+  }
   final String phone;
-  final int id;
   final String name;
   final String lastName;
   final FormStatus formStatus;
@@ -11,7 +19,6 @@ class EditDataState {
   EditDataState({
     this.email = '',
     this.phone = '',
-    this.id = 0,
     this.name = '',
     this.lastName = '',
     this.formStatus = const InitialFormStatus(),
@@ -19,9 +26,7 @@ class EditDataState {
 
   EditDataState copyWith({
     String email,
-    String password,
     String phone,
-    int id,
     String name,
     String lastName,
     FormStatus formStatus,
@@ -29,9 +34,8 @@ class EditDataState {
     return EditDataState(
       email: email ?? this.email,
       phone: phone ?? this.phone,
-      id: id ?? this.id,
       name: name ?? this.name,
-      lastName: name ?? this.lastName,
+      lastName: lastName ?? this.lastName,
       formStatus: formStatus ?? this.formStatus,
     );
   }

@@ -4,20 +4,22 @@ abstract class LoadStatus {
   const LoadStatus();
 }
 
-class InitialStatus extends LoadStatus {
-  const InitialStatus();
+class InitialUserStatus extends LoadStatus {
+  const InitialUserStatus();
 }
 
-class LoadingStatus extends LoadStatus {}
+class LoadingUserStatus extends LoadStatus {}
 
-class LoadedStatus extends LoadStatus {
+class LoadedUserStatus extends LoadStatus {
   final UserData user;
 
-  LoadedStatus({this.user});
+  LoadedUserStatus({this.user});
 }
 
-class ErrorLoad extends LoadStatus {
+class FinishedStatus extends LoadStatus {}
+
+class ErrorUserLoad extends LoadStatus {
   final Exception exception;
 
-  ErrorLoad(this.exception);
+  ErrorUserLoad(this.exception);
 }

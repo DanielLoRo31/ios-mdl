@@ -2,22 +2,16 @@ import 'package:cc_flutter_mobile/config/design_spacings.dart';
 import 'package:cc_flutter_mobile/config/palette.dart';
 import 'package:flutter/material.dart';
 
+class TransactionStatusCard extends StatelessWidget {
+  final num quantity;
 
-class TransactionStatusCard extends StatefulWidget {
-  @override
-  _TransactionStatusCardState createState() => _TransactionStatusCardState();
-}
-
-
-class _TransactionStatusCardState extends State<TransactionStatusCard> {
-  double _quantity = 0.0;
+  TransactionStatusCard({this.quantity});
 
   @override
   Widget build(BuildContext context) {
     var _height =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     var space = _height > 650 ? DesignSpacings.spaceM : DesignSpacings.spaceS;
-
 
     return Card(
       elevation: 4,
@@ -32,7 +26,7 @@ class _TransactionStatusCardState extends State<TransactionStatusCard> {
             Row(
               children: <Widget>[
                 Text(
-                  'Current Savings',
+                  'Current Balance',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -43,12 +37,12 @@ class _TransactionStatusCardState extends State<TransactionStatusCard> {
                   width: space,
                 ),
                 Text(
-                  r'$ ' + this._quantity.toString(),
+                  r'$ ' + this.quantity.toString(),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 15,
                   ),
-                )
+                ),
               ],
             ),
           ],

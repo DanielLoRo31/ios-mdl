@@ -11,77 +11,58 @@ class CCMeterCard extends StatefulWidget {
 }
 
 class _CCMeterCardState extends State<CCMeterCard> {
-  final double _size = 20;
-  final double _fSize1 = 15;
-  final double _fSize2 = 13;
-  String _content = '';
-  String _title = '';
-  String _opinion = '';
-  Color _color;
-  Color _iconColor;
-  IconData _icon;
-
-  void _giveOpinionOfYourSavings() {
-    setState(() {
-      _opinion = widget.opinion;
-    });
-    switch (_opinion) {
-      case 'empty':
-        setState(() {
-          _title = 'Nothing to tell about you';
-          _content =
-              'You just have started, please deposit money\nto the account :)';
-          _color = Palette.lightBlack;
-          _icon = Icons.wb_twighlight;
-          _iconColor = Colors.white70;
-        });
-        break;
-      case 'really_bad':
-        setState(() {
-          _title = 'Mister, your doing bad';
-          _content = 'You should save money...';
-          _color = Colors.black;
-          _icon = Icons.warning;
-          _iconColor = Palette.lightBlack;
-        });
-        break;
-      case 'bad':
-        setState(() {
-          _title = 'Hey! That is not good';
-          _content = 'You are spending toooo much, please\nanalyse that';
-          _color = Palette.redWarning;
-          _icon = Icons.priority_high;
-          _iconColor = Palette.lightBlack;
-        });
-        break;
-      case 'be_careful':
-        setState(() {
-          _title = 'Mister, be careful';
-          _content =
-              'Please check you spends, you are\nstarting to lose savings';
-          _color = Palette.yellowIdea;
-          _icon = Icons.thumb_up;
-          _iconColor = Palette.lightBlack;
-        });
-        break;
-
-      case 'ok!':
-        setState(() {
-          _title = 'Everything ok!';
-          _content = 'Continue like that  :)';
-          _color = Palette.greenConfirm;
-          _icon = Icons.done;
-          _iconColor = Palette.lightBlack;
-        });
-        break;
-    }
-  }
-
-  @override
-  initState() {
-    super.initState();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _giveOpinionOfYourSavings());
+  Map _returnedProps(String opinion) {
+    if(opinion == 'empty') return {
+        'id': 'empty',
+        'title': 'Nothing to tell about you',
+        'content':
+        'You just have started, please deposit money\nto the account :)',
+        'color': Palette.lightBlack,
+        'icon': Icons.wb_twighlight,
+        'iconColor': Colors.white70,
+      };
+    else if(opinion == 'really_bad') return {
+      'id': 'really_bad',
+      'title': 'Mister, your doing bad',
+      'content': 'You should save money...',
+      'color': Colors.black,
+      'icon': Icons.warning,
+      'IconColor': Palette.lightBlack,
+    };
+    else if(opinion == 'bad') return {
+      'id': 'bad',
+      'title': 'Nothing to tell about you',
+      'content':
+      'You just have started, please deposit money\nto the account :)',
+      'color': Palette.lightBlack,
+      'icon': Icons.wb_twighlight,
+      'iconColor': Colors.white70,
+    };
+    else if(opinion == 'be_careful') return {
+      'id': 'be_careful!',
+      'title': 'Mister, be careful',
+      'content': 'Please check you spends, you are\nstarting to lose savings',
+      'color': Palette.yellowIdea,
+      'icon': Icons.done,
+      'iconColor': Palette.lightBlack,
+    };
+    else if(opinion == 'ok!') return {
+      'id': 'ok!',
+      'title': 'Everything ok!',
+      'content': 'Continue like that  :)',
+      'color': Palette.greenConfirm,
+      'icon': Icons.thumb_up,
+      'iconColor': Palette.lightBlack,
+    };
+    return {
+      'id': 'empty',
+      'title': 'Nothing to tell about you',
+      'content':
+      'You just have started, please deposit money\nto the account :)',
+      'color': Palette.lightBlack,
+      'icon': Icons.wb_twighlight,
+      'iconColor': Colors.white70,
+    };
   }
 
   @override
@@ -92,7 +73,7 @@ class _CCMeterCardState extends State<CCMeterCard> {
 
     return Card(
       margin: EdgeInsets.only(bottom: 25),
-      color: _color,
+      color: _returnedProps(widget.opinion)['color'],
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: Container(
@@ -100,9 +81,9 @@ class _CCMeterCardState extends State<CCMeterCard> {
         child: Row(
           children: <Widget>[
             Icon(
-              _icon,
-              size: this._size,
-              color: _iconColor,
+              _returnedProps(widget.opinion)['icon'],
+              size: 20,
+              color: _returnedProps(widget.opinion)['iconColor'],
             ),
             SizedBox(
               height: space / 2,
@@ -113,20 +94,20 @@ class _CCMeterCardState extends State<CCMeterCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    this._title,
+                    _returnedProps(widget.opinion)['title'],
                     style: TextStyle(
                       color: Colors.white70,
-                      fontSize: this._fSize1,
+                      fontSize: 15,
                     ),
                   ),
                   SizedBox(
                     height: space / 2,
                   ),
                   Text(
-                    this._content,
+                    _returnedProps(widget.opinion)['content'],
                     style: TextStyle(
                       color: Colors.white38,
-                      fontSize: this._fSize2,
+                      fontSize: 13,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

@@ -4,22 +4,47 @@ class TransactionType {
   int id;
   String typeDescription;
 
-  TransactionType.fromJson(Map json)
-      : id = json['id'],
-        typeDescription = json["transactionType"];
+  TransactionType({this.id, this.typeDescription});
+
+  factory TransactionType.fromJson(Map<String, dynamic> parsedJson) {
+    return TransactionType(
+        id: parsedJson['id'],
+        typeDescription: parsedJson['typeDescription']);
+  }
+
+  Map toJson() {
+    return {
+      'id': id,
+      'typeDescription': typeDescription,
+    };
+  }
 }
 
 class TransactionOrder {
   int id;
-  double quantity;
+  num quantity;
   String date;
   TransactionType transactionType;
 
-  TransactionOrder.fromJson(Map json)
-      : id = json['id'],
-        quantity = json["quantity"],
-        date = json['date'],
-        transactionType = json['transactionType'];
+  TransactionOrder({this.id, this.quantity, this.date, this.transactionType});
+
+  factory TransactionOrder.fromJson(Map<String, dynamic> parsedJson) {
+    print(parsedJson);
+    return TransactionOrder(
+        id: parsedJson['id'],
+        quantity: parsedJson['quantity'],
+        date: parsedJson['date'],
+        transactionType: TransactionType.fromJson(parsedJson['transactionType']));
+  }
+
+  Map toJson() {
+    return {
+      'id': id,
+      'quantity': quantity,
+      'date': date,
+      'transactionType': transactionType,
+    };
+  }
 }
 
 class TransactionDetail {
@@ -29,13 +54,30 @@ class TransactionDetail {
   String concept;
   TransactionOrder order;
 
-  TransactionDetail.fromJson(Map json)
-      : id = json['accountId'],
-        destination = json["destination"],
-        origin = json['origin'],
-        concept = json['concept'],
-        order = json['transactionOrder'];
+  TransactionDetail({this.id, this.destination, this.origin, this.concept, this.order});
+
+
+  factory TransactionDetail.fromJson(Map<String, dynamic> parsedJson) {
+    return TransactionDetail(
+        id: parsedJson['id'],
+        destination: UserData.fromJson(parsedJson['destination']),
+        origin: UserData.fromJson(parsedJson['origin']),
+        concept: parsedJson['concept'],
+        order: TransactionOrder.fromJson(parsedJson['transactionOrder']));
+  }
+
+  Map toJson() {
+    return {
+      'id': id,
+      'concept': concept,
+      'destination': destination,
+      'origin': origin,
+      'transactionOrder': order,
+    };
+  }
 // isCompleted = json["isCompleted"] == "true",
+
+
 }
 
 class TransactionUser {
@@ -45,17 +87,20 @@ class TransactionUser {
   String transactionUserType;
   int transactionUserStatus;
 
-  TransactionUser(
-      {this.id = 0,
-      this.userData,
-      this.transactionDetail,
-      this.transactionUserType,
-      this.transactionUserStatus = 0});
+  TransactionUser({
+    this.id = 0,
+    this.userData,
+    this.transactionDetail,
+    this.transactionUserType,
+    this.transactionUserStatus = 0
+  });
 
-  TransactionUser.fromJson(Map json)
-      : id = json['id'],
-        userData = json["userData"],
-        transactionDetail = json['transactionDetail'],
-        transactionUserType = json['transactionUType'],
-        transactionUserStatus = json['transactionUStatus'];
+  factory TransactionUser.fromJson(Map<String, dynamic> parsedJson) {
+    return TransactionUser(
+        id: parsedJson['id'],
+        userData: UserData.fromJson(parsedJson['userData']),
+        transactionDetail: TransactionDetail.fromJson(parsedJson['transactionDetail']),
+        transactionUserType: parsedJson['transactionUType'],
+        transactionUserStatus: parsedJson['transactionUStatus']);
+  }
 }

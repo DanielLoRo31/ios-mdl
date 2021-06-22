@@ -9,8 +9,7 @@ class TitleCard extends StatelessWidget {
   final String styleType;
   final double width;
   final double height;
-  final double fSize1;
-  final double fSize2;
+  final bool isTitle;
 
   TitleCard({
     @required this.title,
@@ -18,40 +17,41 @@ class TitleCard extends StatelessWidget {
     @required this.styleType,
     @required this.width,
     @required this.height,
-    @required this.fSize1,
-    @required this.fSize2
+    @required this.isTitle,
   });
 
-  String _validateEmotions() {
+  String get _validateEmotions {
     switch(this.styleType) {
       case 'Happy':
         return LogoPath.rHappyLogoPath;
-        break;
       case 'Sad':
         return LogoPath.rSadDeadLogoPath;
-        break;
       case 'Smile':
         return LogoPath.rSmileLogoPath;
-        break;
       case 'Surprise':
         return LogoPath.rSurpriseMFLogoPath;
-        break;
       case 'Love':
         return LogoPath.rILoveULogoPath;
-        break;
       case 'Email':
         return LogoPath.rGotAnEmailLogoPath;
-        break;
       case 'Mad':
         return LogoPath.rImReallyMadLogoPath;
-        break;
       case 'Idea':
         return LogoPath.rIHaveAnIdeaLogoPath;
-        break;
       default:
         return LogoPath.rHappyLogoPath;
-        break;
     }
+  }
+
+  Color get _cardColor {
+    if(this.isTitle) {
+      return Palette.darkGreen;
+    } else if(this.title == 'Account Created!') {
+      return Palette.greenConfirm;
+    } else if(this.title == 'Request Failed...') {
+      return Palette.redWarning;
+    }
+    return Palette.lightBlack;
   }
 
   @override
@@ -61,7 +61,7 @@ class TitleCard extends StatelessWidget {
     var space = _height > 650 ? DesignSpacings.spaceM : DesignSpacings.spaceS;
 
     return Card(
-      color: Palette.lightBlack,
+      color: _cardColor,
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: Container(
@@ -69,13 +69,11 @@ class TitleCard extends StatelessWidget {
         child: Row(
           children: <Widget>[
             Image(
-              image: AssetImage(_validateEmotions()),
+              image: AssetImage(_validateEmotions),
               width: this.width,
               height: this.height,
             ),
-            SizedBox(
-              height: space,
-            ),
+            SizedBox(height: space,),
             Container(
               padding: const EdgeInsets.fromLTRB(25, 5, 15, 5),
               child: Column(
@@ -85,17 +83,15 @@ class TitleCard extends StatelessWidget {
                     title,
                     style: TextStyle(
                       color: Colors.white70,
-                      fontSize: this.fSize1,
+                      fontSize: 18,
                     ),
                   ),
-                  SizedBox(
-                    height: space,
-                  ),
+                  SizedBox(height: space,),
                   Text(
                     content,
                     style: TextStyle(
                       color: Colors.white38,
-                      fontSize: this.fSize2,
+                      fontSize: 16,
                     ),
                   ),
                 ],

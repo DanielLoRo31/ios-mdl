@@ -1,3 +1,3 @@
 class ApiService {
-  static String baseUrl = 'http://localhost:8080/api';
+  static String baseUrl = 'http://192.168.1.185:8080/api';
 }

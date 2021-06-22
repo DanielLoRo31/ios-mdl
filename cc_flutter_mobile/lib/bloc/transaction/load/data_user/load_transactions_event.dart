@@ -1,5 +1,7 @@
 abstract class LoadTransactionsEvent {}
 
-class FetchTransactionsUser extends LoadTransactionsEvent {}
+class FetchStart extends LoadTransactionsEvent {}
 
-class FetchingTransactionsUser extends LoadTransactionsEvent {}
+class FetchFinished extends LoadTransactionsEvent {}
+
+class FetchTransactionsUser extends LoadTransactionsEvent {}

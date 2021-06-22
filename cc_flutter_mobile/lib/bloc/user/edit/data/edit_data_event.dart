@@ -12,12 +12,6 @@ class PhoneChanged extends EditDataEvent {
   PhoneChanged({this.phone});
 }
 
-class IdChanged extends EditDataEvent {
-  final int id;
-
-  IdChanged({this.id});
-}
-
 class NameChanged extends EditDataEvent {
   final String name;
 

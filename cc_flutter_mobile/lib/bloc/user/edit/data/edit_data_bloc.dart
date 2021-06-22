@@ -1,6 +1,7 @@
 import 'package:cc_flutter_mobile/bloc/user/edit/data/edit_data_event.dart';
 import 'package:cc_flutter_mobile/bloc/user/edit/data/edit_data_state.dart';
 import 'package:cc_flutter_mobile/bloc/user/edit/submit_data.dart';
+import 'package:cc_flutter_mobile/data/model/user.dart';
 import 'package:cc_flutter_mobile/data/repositories/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,10 +21,6 @@ class EditDataBloc extends Bloc<EditDataEvent, EditDataState> {
       yield state.copyWith(phone: event.phone);
 
       // Form submitted
-    } else if (event is IdChanged) {
-      yield state.copyWith(id: event.id);
-
-      // Form submitted
     } else if (event is NameChanged) {
       yield state.copyWith(name: event.name);
 
@@ -36,11 +33,22 @@ class EditDataBloc extends Bloc<EditDataEvent, EditDataState> {
       yield state.copyWith(formStatus: FormSubmitting());
 
       try {
-        await userRepository.editAccount();
+        UserData _userData = new UserData();
+        UserAccount _userAccount = new UserAccount();
+        _userData.name = state.name;
+        _userData.lastName = state.lastName;
+        _userAccount.phone = state.phone;
+        _userAccount.email = state.email;
+        _userData.userAccount = _userAccount;
+
+        await userRepository.editAccountData(_userData);
+
         yield state.copyWith(formStatus: SubmissionSuccess());
       } catch (e) {
+        print(e);
         yield state.copyWith(formStatus: SubmissionFailed(e));
       }
+      yield state.copyWith(formStatus: InitialFormStatus());
     }
   }
 }

@@ -1,11 +1,26 @@
 import 'package:cc_flutter_mobile/bloc/authentication/submit_status.dart';
+import 'package:cc_flutter_mobile/config/extra_constants.dart';
 
 class LoginState {
   final String email;
-  bool get isValidEmail => email.length > 3;
+  bool get isValidEmail {
+    final Pattern _pattern = ExtraConstants.emailRegexPattern;
+    RegExp regExp = new RegExp(_pattern);
+    if(!regExp.hasMatch(email)) {
+      return false;
+    }
+    return true;
+  }
 
   final String password;
-  bool get isValidPassword => password.length > 6;
+  bool get isValidPassword{
+    final Pattern _pattern = ExtraConstants.passwordRegexPattern;
+    RegExp regExp = new RegExp(_pattern);
+    if(!regExp.hasMatch(password)) {
+      return false;
+    }
+    return true;
+  }
 
   final FormStatus formStatus;
 

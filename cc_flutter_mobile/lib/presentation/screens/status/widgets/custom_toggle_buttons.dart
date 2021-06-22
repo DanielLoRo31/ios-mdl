@@ -2,35 +2,25 @@ import 'package:cc_flutter_mobile/config/palette.dart';
 import 'package:flutter/material.dart';
 
 class CustomToggleButtons extends StatefulWidget {
-  const CustomToggleButtons({Key key}) : super(key: key);
+  final Function setOption;
+  final List<bool> isSelected;
+
+  const CustomToggleButtons(
+      {Key key, @required this.setOption, @required this.isSelected})
+      : super(key: key);
 
   @override
   _CustomToggleButtonsState createState() => _CustomToggleButtonsState();
 }
 
 class _CustomToggleButtonsState extends State<CustomToggleButtons> {
-  List<bool> _isSelected = [true, false, false];
-
-  void _setOption(int index) {
-    setState(() {
-      for (int i = 0; i < _isSelected.length; i++) {
-        if (i != index) {
-          _isSelected[i] = false;
-        }
-        if (i == index) {
-          _isSelected[i] = true;
-        }
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 30,
       child: ToggleButtons(
-        onPressed: _setOption,
-        isSelected: _isSelected,
+        onPressed: widget.setOption,
+        isSelected: widget.isSelected,
         children: <Widget>[
           Container(
               padding: EdgeInsets.only(left: 10, right: 10),

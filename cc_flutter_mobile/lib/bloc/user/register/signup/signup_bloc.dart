@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:cc_flutter_mobile/bloc/user/register/register_blocs.dart';
 import 'package:cc_flutter_mobile/bloc/user/register/submit_status.dart';
-import 'package:cc_flutter_mobile/data/repositories/auth_repository.dart';
 import 'package:cc_flutter_mobile/bloc/user/register/signup/signup_state.dart';
 import 'package:cc_flutter_mobile/bloc/user/register/signup/signup_event.dart';
+import 'package:cc_flutter_mobile/data/model/user.dart';
 import 'package:cc_flutter_mobile/data/repositories/user_repository.dart';
 
 
@@ -22,23 +22,35 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
       yield state.copyWith(password: event.password);
     }
     else if (event is PhoneChanged) {
-      yield state.copyWith(password: event.phone);
+      yield state.copyWith(phone: event.phone);
     }
     else if (event is NameChanged) {
-      yield state.copyWith(password: event.name);
+      yield state.copyWith(name: event.name);
     }
     else if (event is LastNameChanged) {
-      yield state.copyWith(password: event.lastName);
+      yield state.copyWith(lastName: event.lastName);
     }
     else if (event is SignUpSubmitted) {
       yield state.copyWith(formStatus: FormSubmitting());
 
       try {
-        await userRepository.registerAccount();
-        yield state.copyWith(formStatus: SubmissionSuccess());
+        UserData _userData = new UserData();
+        UserAccount _userAccount = new UserAccount();
+        print(state.lastName);
+        _userData.name = state.name;
+        _userData.lastName = state.lastName;
+
+        _userAccount.phone = state.phone;
+        _userAccount.password = state.password;
+        _userAccount.email = state.email;
+
+        _userData.userAccount = _userAccount;
+        await userRepository.registerAccount(_userData);
+        yield state.copyWith(formStatus: SubmissionCreateSuccess());
       } catch (e) {
-        yield state.copyWith(formStatus: SubmissionFailed(e));
+        yield state.copyWith(formStatus: SubmissionCreateFailed(e));
       }
+      yield state.copyWith(formStatus: InitialFormStatus());
     }
   }
 }
